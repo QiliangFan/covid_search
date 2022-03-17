@@ -57,14 +57,15 @@ class LocWidght(QWidget):
         result = pd.DataFrame(columns=["地址", "疑似排查源（可能归属的排查地点）"])
 
         for search in search_list:
-            for risk in risk_loc:
-                if isinstance(risk, str):
-                    possible = re.split(r",|、|，", risk)
-                    if any(p in search for p in possible):
-                        result = pd.concat([result, pd.DataFrame([{
-                            "地址": search,
-                            "疑似排查源（可能归属的排查地点）": risk
-                        }])], ignore_index=True)
+            if isinstance(search, str):
+                for risk in risk_loc:
+                    if isinstance(risk, str):
+                        possible = re.split(r",|、|，", risk)
+                        if any(p in search for p in possible):
+                            result = pd.concat([result, pd.DataFrame([{
+                                "地址": search,
+                                "疑似排查源（可能归属的排查地点）": risk
+                            }])], ignore_index=True)
 
         file, _ = QFileDialog.getSaveFileName(self, "文件保存", ".", "Excel文件(*.xlsx)")
         try:
